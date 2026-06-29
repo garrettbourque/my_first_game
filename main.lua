@@ -1,4 +1,29 @@
-local message =""
+--position of rectangle
+local x =100 
+local y=100
+local speed =200 --pixels per second
+
+
+function love.update(dt) 
+    if love.keyboard.isDown("right") then
+        x=x+speed*dt
+    elseif love.keyboard.isDown("left") then
+        x=x-speed*dt
+    end
+     
+    if love.keyboard.isDown("down") then
+        y=y+speed*dt
+    elseif love.keyboard.isDown("up") then
+        y=y-speed*dt
+    end
+end
+
+function love.draw()
+    love.graphics.setColor(.2, .7, 1)
+    love.graphics.rectangle("fill", x, y, 50, 50)
+end
+
+--[[local message =""
 
 function love.keypressed(key)
     
@@ -10,7 +35,7 @@ end
 function love.draw()
     love.graphics.print(message,100,100)
 end
-
+]]
 
 
 
