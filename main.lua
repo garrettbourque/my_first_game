@@ -1,4 +1,140 @@
 
+--[[episode 12 state management
+
+]]
+
+function love.load()
+
+    gameState ="gameOver" --start at the menu
+    timer=5 --later for gameplay
+end
+
+function love.update(dt)
+if gameState=="play" then
+    timer=timer-dt
+    if timer<=0 then 
+        gameState="gameOver"
+        timer=5 --resetting tiemr for next round
+    end
+    
+end
+
+end
+
+function love.draw()
+    if gameState =="menu" then
+        love.graphics.setFont(love.graphics.newFont(48))
+        love.graphics.setColor(1,1,1,1)
+        --love.graphics.printf(text, x, y, limit, align)
+        love.graphics.printf("This is the menu screen \n Press Enter to Start", 0, 200, love.graphics.getWidth(), "center")
+
+    elseif gameState=="play" then
+        love.graphics.setColor(0,1,0,1)
+        --love.graphics.circle("fill", 400, 300, 30) --placeholder for gameplay
+        love.graphics.printf("Timer: " .. math.ceil(timer), 0, 300, love.graphics.getWidth(), "center")
+    
+    elseif gameState=="gameOver" then
+        love.graphics.setFont(love.graphics.newFont(48))
+        love.graphics.setColor(1,0,0,1)
+        love.graphics.printf("Game Over! Press R to Restart", 0, 300, love.graphics.getWidth(), "center")
+
+        
+    end
+end
+
+function love.keypressed(key)
+    --enter key == "return"
+if gameState=="menu" and key == "return" then 
+    gameState ="play"
+elseif gameState =="gameOver" and key =="r" then
+    gameState ="menu"
+end
+end
+
+
+
+
+
+
+
+--[[episode 11 animation sprite sheet
+
+
+
+
+function love.load()
+    spriteSheet=love.graphics.newImage("animation/blue/blue_walk_EAST-Sheet.png")
+    frameWidth,frameHeight = 32, 50
+
+    player = {
+        x=100,
+        y=100,
+        speed=100
+
+    }
+
+--get sheet size
+local sheetWidth, sheetHeight = spriteSheet:getDimensions()
+local columns = sheetWidth / sheetHeight
+
+--slice the frames into quads
+--quad is a window or cut out
+--                              the x and y are the top left corner of sprite sheet
+--#region                       width and height are individual sprite size
+--#region                       sw and sh are the size of the endtire sprite sheet
+--quads = love.graphics.newQuad(x,y,width,height,sw,sh)
+quads ={}
+for i=0, columns -1 do
+    quads[#quads +1] = love.graphics.newQuad(i* frameWidth,0,frameWidth,frameHeight,sheetWidth,sheetHeight)
+
+end
+
+currentFrame=1
+timer = 0
+frameDuration =0.15 --seconds per frame
+facingLeft = false
+
+end
+
+function love.update(dt)
+
+    -- animation update
+    timer = timer+dt
+    if timer>= frameDuration then
+        timer=timer-frameDuration
+        if isMoving then
+            currentFrame = (currentFrame % #quads ) + 1
+        end
+    end
+
+    isMoving=false
+    if love.keyboard.isDown("right") then
+        isMoving = true
+        facingLeft=false
+        player.x = player.x + player.speed * dt
+    elseif love.keyboard.isDown("left") then
+        isMoving =true
+        facingLeft= true
+        player.x = player.x - player.speed * dt
+    end
+end
+
+
+function love.draw()
+    if facingLeft then
+        love.graphics.draw(spriteSheet, quads[currentFrame], player.x + 2 * frameWidth, player.y, 0, -2, 2)
+    else
+        love.graphics.draw(spriteSheet, quads[currentFrame], player.x  , player.y, 0,2,2)
+
+    end
+
+end
+
+]]
+
+
+
+
 
 
 
